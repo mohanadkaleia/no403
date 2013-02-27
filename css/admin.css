@@ -1,0 +1,139 @@
+/* ----------------------------------------------------------------------------------------------------------
+
+    Output device: screen, projection
+
+    Author:     Mohanad Shab Kaleia
+    email : 	m.kaleia@computech-sy.com
+    Update:     2012-08-20, 16:05 GMT+1
+    Version:    1.0.0
+    Copyright : CompuTech Group , www.computech-sy.com , contact@computech-sy.com
+    Structure:
+        display; position; z-index; float; clear; width; height; overflow; margin; padding; border; background; align; font;
+
+    Content:
+
+        1) HTML tags
+        2) header
+        3) Footer
+        4) body
+        5) login
+        
+
+---------------------------------------------------------------------------------------------------------- */
+
+/* ----------------------------------------------------------------------------------------------------------
+1) HTML tags
+---------------------------------------------------------------------------------------------------------- */
+
+body 
+{		
+	background-color: #353535;	
+}
+
+html, body {
+	height: 100%;
+}
+
+.clear
+{
+	clear:both;
+}
+/* Wrapper for page content to push down footer */
+#wrap {
+  min-height: 100%;
+  height: auto !important;
+  height: 100%;
+  /* Negative indent footer by it's height */
+  margin: 0 auto -60px;
+  
+}
+
+      /* ----------------------------------------------------------------------------------------------------------
+
+
+
+/* ----------------------------------------------------------------------------------------------------------
+3) Footer
+---------------------------------------------------------------------------------------------------------- */
+
+/* Set the fixed height of the footer here */
+  #push,
+  #footer {
+    height: 60px;
+  }
+  #footer {
+    background-color: #1C1C1C;
+  }
+
+  /* Lastly, apply responsive CSS fixes as necessary */
+  @media (max-width: 767px) {
+    #footer {
+      margin-left: -20px;
+      margin-right: -20px;
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+  }
+
+
+
+ 
+  .container .credit {
+    margin: 20px 0;
+  }
+
+/* ----------------------------------------------------------------------------------------------------------
+4) body
+---------------------------------------------------------------------------------------------------------- */
+
+/* ----------------------------------------------------------------------------------------------------------
+5) Signin
+---------------------------------------------------------------------------------------------------------- */
+.login_slogan
+{
+	max-width: 320px;
+    margin: 0 auto 20px;    
+    color: #ffffff;
+    font-size:26px;
+    font-weight: bold;
+    padding-top:20px; 
+}
+
+.login_slogan img
+{
+	height:150px;
+	margin-left:90px;
+}
+
+.login_slogan p
+{	
+	margin-left:20px;
+}
+
+.form-signin {
+    max-width: 300px;
+    padding: 19px 29px 29px;
+    margin: 0 auto 20px;
+    background-color: #fff;
+    border: 1px solid #e5e5e5;
+    -webkit-border-radius: 5px;
+   -moz-border-radius: 5px;
+    border-radius: 5px;
+	-webkit-box-shadow: 0 1px 2px rgba(0,0,0,.05);
+   -moz-box-shadow: 0 1px 2px rgba(0,0,0,.05);
+    box-shadow: 0 1px 2px rgba(0,0,0,.05);
+}
+.form-signin .form-signin-heading, .form-signin .checkbox {
+    margin-bottom: 10px;
+}
+.form-signin input[type="text"],
+.form-signin input[type="password"] {
+    font-size: 16px;
+    height: auto;
+    margin-bottom: 15px;
+    padding: 7px 9px;
+}
+
+
+
+

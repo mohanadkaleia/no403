@@ -1,0 +1,87 @@
+/* ----------------------------------------------------------------------------------------------------------
+
+    Output device: screen, projection
+
+    Author:     Mohanad Shab Kaleia
+    email : 	m.kaleia@computech-sy.com
+    Update:     2013-02-26, 16:05 GMT+1
+    Version:    1.0.0
+    Copyright : CompuTech Group , www.computech-sy.com , contact@computech-sy.com
+    Structure:
+        display; position; z-index; float; clear; width; height; overflow; margin; padding; border; background; align; font;
+
+---------------------------------------------------------------------------------------------------------- */
+
+.grid table
+{
+	min-width: 100%;
+	margin:0 auto;
+	border: 1px solid #ddd;
+	background-color:#ffffff;
+		
+}
+
+
+.grid th
+{
+	min-width: 50px;	 	        
+    border-bottom: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+    padding: 5px;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #fff), color-stop(1, #e4e4e4));
+    background: -webkit-linear-gradient(top, #fff 0%, #e4e4e4 100%);
+    background: -moz-linear-gradient(top, #fff 0%, #e4e4e4 100%);
+    background: -o-linear-gradient(top, #fff 0%, #e4e4e4 100%);
+    background: -ms-linear-gradient(top, #fff 0%, #e4e4e4 100%);
+    background: linear-gradient(top, #fff 0%, #e4e4e4 100%);   
+    font-size:smaller;
+    font-family:"ubuntu" , "times new roman" , "arial"         
+}
+
+.grid td
+{
+	border-right: 1px solid #ddd;
+	border-bottom: 1px solid #ddd;
+	padding:5px;
+	font-size:16px;	
+}
+
+.grid td.func
+{
+	width:25px;
+}
+
+.grid td.middle
+{	
+	text-align: center;
+}
+
+.grid tr:hover
+{
+	background-color: #F2FFD1;
+}
+
+.grid-search
+{
+	margin-top:18px;	
+}
+
+.grid-search input
+{
+	-webkit-transition: width, 200ms ease-out;
+	-moz-transition: width, 200ms ease-out;
+	-o-transition: width, 200ms ease-out;
+	-ms-transition: width, 200ms ease-out;
+	transition: width, 200ms ease-out;
+	text-align: left;
+}
+
+.grid-search input focus
+{
+	
+}

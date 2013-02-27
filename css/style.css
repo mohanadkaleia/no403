@@ -1,0 +1,417 @@
+/* ----------------------------------------------------------------------------------------------------------
+
+    Output device: screen, projection
+    Author:     Mohanad Shab Kaleia
+    Update:     2012-09-26, 16:05 GMT+1
+    Version:    1.0.0
+
+    Structure:
+        display; position; z-index; float; clear; width; height; overflow; margin; padding; border; background; align; font;
+
+    Content:
+
+        1) HTML tags
+        2) main
+        3) Footer
+        4) login
+        
+      
+
+---------------------------------------------------------------------------------------------------------- */
+
+/* ----------------------------------------------------------------------------------------------------------
+1) HTML tags
+---------------------------------------------------------------------------------------------------------- */
+
+body 
+{			
+	font-family: arial;	
+	background : url('../images/bck.jpg');	
+}
+
+html, body {
+	height: 100%;
+}
+
+
+h3
+{	
+	font-size: 20px;
+    line-height: 27px;
+    font-weight: bold;
+    font-family: ubuntu;     
+}
+h3.title 
+{
+    border-bottom:2px solid #3A8EE1;
+    margin-bottom: 10px;
+    padding: 10px;
+    color:#222222;
+}
+
+
+
+
+
+
+
+/* ----------------------------------------------------------------------------------------------------------
+2) header
+---------------------------------------------------------------------------------------------------------- */
+#header
+{
+	/*background-image:url('../images/fabric-100x100.jpg');*/
+	background-color:#444444;
+	height:350px;		
+	background-image:url('../images/noise.png');
+	padding:0 auto;
+	margin:0 auto;
+}
+
+#social
+{
+	width:300px;
+	position: absolute;
+	margin-right:50px;
+	right:0px;		
+	margin-top:50px;	
+}
+
+#social img
+{
+	height:75px;
+	width:75px;
+	margin-left:10px;
+}
+
+#slogan
+{
+	padding-top:20px;
+	margin-left:20px;	
+	float:left;
+}
+
+#searchContainer
+{
+	margin-top:175px;
+	position: absolute;
+	right:90px;
+}
+
+#searchContainer input[type="text"]
+{
+	font-size:24px;
+	width:200px;	
+	height:30px;
+	padding-right:32px;
+	float:left;
+	background-color: #E5E5E5;
+	
+	/* slow motion*/
+	-webkit-transition: all 0.50s ease-in-out;
+    -moz-transition: all 0.50s ease-in-out;
+    -ms-transition: all 0.50s ease-in-out;
+    -o-transition: all 0.50s ease-in-out;
+	
+}
+
+#searchContainer input[type="text"]:focus
+{
+	font-size:24px;	
+	padding-right:32px;
+	float:left;
+	background-color: #ffffff;
+	
+}
+
+#searchSubmit{
+    background: transparent url("../images/search-icon.gif") no-repeat;
+    width: 24px;
+    height: 24px;
+    border: none; /* removes default button borders */
+    cursor: pointer; /* when your mouse is over the button, cursor changes into a pointer */
+   	margin-left:-30px;
+   	margin-top:10px;
+}
+
+#menu
+{
+	height:50px;
+	background-color:#333333;
+	-moz-box-shadow:    0px 3px 2px 2px #999;
+  	-webkit-box-shadow: 0px 3px 2px 2px #999;
+  	box-shadow:         0px 3px 2px 2px #999;  	
+	font-weight:bold;
+	font-family: 'arial';	
+	font-size:1.4em;
+	border-bottom: 2px solid #3A8EE1;	
+}
+
+#menu ul
+{
+	height:50px;
+	width:800px;
+	margin:0 auto;	
+	margin-top:30px;
+	
+}
+
+#menu ul li
+{
+	float:left;
+	position: relative;	
+}
+
+
+#menu ul li a
+{
+	display:block;
+	text-align:center;			
+	padding-left:30px;
+	padding-right:30px;
+	padding-top:13px;
+	padding-bottom:15px;
+	margin-left:10px;	
+}
+
+#menu ul li.login a
+{	
+	color:#7FFF00;	
+}
+
+#menu ul li a:hover , #menu ul li.active a
+{	
+	color:#ffffff;
+	-webkit-transition: all 0.60s ease-in-out;
+  	-moz-transition: all 0.60s ease-in-out;
+  	-ms-transition: all 0.60s ease-in-out;
+  	-o-transition: all 0.60s ease-in-out;
+  	background-color:#3a8ee1;
+}
+
+
+/* ----------------------------------------------------------------------------------------------------------
+2) main
+---------------------------------------------------------------------------------------------------------- */
+#main
+{		
+	background-color:#ffffff;        
+    margin:auto;
+    margin-top:50px;
+    margin-bottom:30px;
+    padding-bottom:30px;
+    padding-top:30px;
+    width:80%;   
+    
+    display:table;
+    /* add shadow*/         
+	-moz-box-shadow: -5px 5px 5px #aaa;
+	-webkit-box-shadow: -5px 5px 5px #aaa;
+	 box-shadow: -5px 5px 5px #aaa;	
+	
+}
+
+
+/* ----------------------------------------------------------------------------------------------------------
+3) Footer
+---------------------------------------------------------------------------------------------------------- */
+#footer
+{	
+	width:100%;	
+	height:100px;	
+	color:white;	
+	background-color:#444444;	
+	border-top: 4px solid #3A8EE1; 
+	background-image:url('../images/noise.png');
+	margin-top:20px;			
+}
+
+#footer a
+{
+	color:#3A8EE1;
+}
+
+#footer p
+{
+	margin-left:20px;
+	margin-top:40px;
+	float:left;
+
+	
+}
+
+
+/*Facebook button*/
+#footer img
+{
+	
+}
+
+#footer ul
+{	
+	margin-top:30px;
+	float:right;
+	margin-right:20px;
+		
+}
+
+#footer ul li
+{
+	margin-top:10px;
+	margin-left:10px;
+	float:left;	
+}
+
+#footer ul li a
+{	
+	color:#ffffff;
+}
+/* ----------------------------------------------------------------------------------------------------------
+) apps
+---------------------------------------------------------------------------------------------------------- */
+.app_container
+{
+	width:892px;
+	height:450px;
+	margin:0 auto;
+	margin-top:10px;
+	display: block;			
+}
+
+.app
+{
+	width:275px;
+	height:350px;
+	background-color:#e1e1e1;
+	float:left;	
+	margin-bottom:15px;
+	margin-top:15px;
+	border: 1px solid #DDDDDD;
+	margin-left:15px;	  	  	  		
+}
+
+.app.last
+{
+	margin-right:0px;
+}
+
+.app:hover
+{
+	background-color:#ffffff;
+}
+
+/* ----------------------------------------------------------------------------------------------------------
+) others
+---------------------------------------------------------------------------------------------------------- */
+.seperator
+{
+	background-image: url('../images/seperator.png');
+	height:5px;
+	margin-top:20px;
+}
+
+.pageTitle
+{	
+	font-family: 'arial' , 'times new roman';
+	font-size:22px;
+	margin-bottom:10px;
+	color:#666666;
+}
+
+.clear
+{
+	clear: both;
+}
+
+
+/* ----------------------------------------------------------------------------------------------------------
+) slider button
+---------------------------------------------------------------------------------------------------------- */
+#feedback
+{
+	display:scroll;
+	position:fixed;
+	bottom:30%;
+	right:-120px;
+	-webkit-transition: all 0.60s ease-in-out;
+  	-moz-transition: all 0.60s ease-in-out;
+  	-ms-transition: all 0.60s ease-in-out;
+  	-o-transition: all 0.60s ease-in-out;
+}
+
+#feedback:hover
+{
+	right:0px;
+	-webkit-transition: all 0.60s ease-in-out;
+  	-moz-transition: all 0.60s ease-in-out;
+  	-ms-transition: all 0.60s ease-in-out;
+  	-o-transition: all 0.60s ease-in-out;
+}
+
+
+#login
+{
+	display:scroll;
+	position:fixed;
+	bottom:40%;
+	right:-57px;
+	-webkit-transition: all 0.40s ease-in-out;
+  	-moz-transition: all 0.40s ease-in-out;
+  	-ms-transition: all 0.40s ease-in-out;
+  	-o-transition: all 0.40s ease-in-out;
+}
+
+#login:hover
+{
+	right:0px;
+	-webkit-transition: all 0.40s ease-in-out;
+  	-moz-transition: all 0.40s ease-in-out;
+  	-ms-transition: all 0.40s ease-in-out;
+  	-o-transition: all 0.40s ease-in-out;
+}
+
+
+
+/************************** Request page ***********************
+ * 
+ */
+
+.request_form input[type=text]
+{
+	padding : 5px;
+	height:20px;
+	width:400px;
+	font-size: 16px;
+}
+
+.request_form p
+{
+	color:#3A8EE1;
+	font-family: arial , "times new roman";
+	font-weight:bold;	
+	margin-top:15px;
+}
+.request_form textarea
+{
+	width:400px;
+	
+}
+
+.left_form
+{
+	float:left;
+	padding:5px;
+	margin :5px;
+	margin-right: 20px;	
+}
+
+.right_form
+{
+	padding:5px;
+	margin :5px;
+	margin-left: 20px;	
+	margin-top:15px;
+}
+
+
+
