@@ -18,6 +18,7 @@
 	margin:0 auto;
 	border: 1px solid #ddd;
 	background-color:#ffffff;
+	
 		
 }
 
@@ -68,20 +69,29 @@
 
 .grid-search
 {
-	margin-top:18px;	
+	margin-bottom:0px;
+	padding:0px;
 }
 
-.grid-search input
-{
-	-webkit-transition: width, 200ms ease-out;
-	-moz-transition: width, 200ms ease-out;
-	-o-transition: width, 200ms ease-out;
-	-ms-transition: width, 200ms ease-out;
-	transition: width, 200ms ease-out;
-	text-align: left;
+.grid-search input#search
+{	
+	margin-left:60px;	
 }
 
-.grid-search input focus
+.pagination
 {
-	
+	margin-top:0px;
+	margin-bottom:0px;
+	padding:0;
+	height:30px;	
+}
+.well
+{
+	margin-top:10px;
+}
+
+.grid-pagination
+{
+	font-size:small;
+	color:gray;
 }

@@ -39,7 +39,7 @@ class Log extends CI_Controller
 		//set the active tab page
 		$data["log"] = "active";	
 					
-		
+		$this->load->model('User');
 		//include header - nav - footer
 		$this->load->view('gen/header_admin');
 		$this->load->view('gen/nav_admin' , $data);

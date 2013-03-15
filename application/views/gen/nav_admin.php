@@ -27,7 +27,8 @@
 						</a>
 						<ul class="dropdown-menu">
 							<li><a tabindex="-1" href="<?php echo base_url();?>login/logout"><i class="icon-off"></i> Logout</a></li>
-							<li><a tabindex="-1" href="#"><i class="icon-pencil"></i> Change password</a></li>
+							<li class="divider"></li>
+							<li><a tabindex="-1" href="#"><i class="icon-wrench"></i> Account setting</a></li>							
 						</ul>
 					</li>																						
 			    </ul>

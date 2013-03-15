@@ -16,7 +16,11 @@
 	<link rel="stylesheet" media="all" type="text/css" href="<?php echo base_url();?>css/admin_style.css" />	
    	
    	
-   	
+   	<!-- load js 
+	<script src="http://code.jquery.com/jquery-latest.js"></script>-->
+	<script src="<?php echo base_url();?>js/jquery-1.8.0.min.js"></script>
+	<script src="<?php echo base_url();?>js/bootstrap.min.js"></script>
+	<script src="<?php echo base_url();?>js/grid.js"></script>
 	
 		
 	
