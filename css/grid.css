@@ -95,3 +95,16 @@
 	font-size:small;
 	color:gray;
 }
+
+.grid-pagination input#page_number
+{
+	width: 50px;
+	text-align: center;
+	border-width:thin;
+	border-style:solid;
+	border-color:#DDD;
+	border-left-style:none;
+	border-bottom-left-radius: 0;
+	border-top-left-radius: 0px;
+	color:#08C;
+}

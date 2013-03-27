@@ -100,8 +100,9 @@ class User extends CI_Controller
 		$this->grid->option['title'] = "Users";   //  grid title
 		$this->grid->option['id'] = "id";         // database table id
 		$this->grid->option['sortable'] = FALSE;  // is sortable
-		$this->grid->option['page_size'] = 10;    //records per page
+		$this->grid->option['page_size'] = 5;    //records per page
 		$this->grid->option['row_number'] = true; //show the row number
+		$this->grid->option['current_page'] = $page_number; //current page
 		$this->grid->option['add_button'] = true; //show add button
 		$this->grid->option['add_url'] = base_url()."user/addUser"; //add url
 		$this->grid->option['add_title'] = "Add new"; //add title

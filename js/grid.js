@@ -21,11 +21,98 @@ function gridRender(grid_id)
 	//get the data, option and control from ajax page with the url from action attribute in our grid table
 	var action = $("#"+grid_id).attr("action");
 	
-	alert(action);
+				
+	//get the hash from the url
+	var grid_option = gridHashReader(grid_id);	
+	
+	//if there is no hash option is passed then use the default	
+	if(grid_option == null)
+	{
+		//page number by default is 1
+		page_number = 1;
 		
+		//search keyword
+		search = "";
+		
+		//sort
+	}
+	else
+	{
+		//page number	
+		var page_number = grid_option[0];
+		
+		//search criteia
+		var search_keyword = grid_option[1];	
+	}
+			
+	//add the option to the action
+	action += "/"+page_number; 
+	
+	
+			
+	//get the data using ajax function
+	gridAjaxRender(grid_id , action);					  				
+} 
+
+
+
+/**
+ * function name : gridRender
+ * 
+ * Description : 
+ * read the data and then build the grid table
+ * 
+ * parameter:
+ * grid_id : grid table id
+ * option : array of options {page number , search , sort} the option is passed from javascript 
+ * and it is different from options that passes from php file
+ * Created date ; 28-2-2013
+ * Modification date : ---
+ * Modfication reason : ---
+ * Author : Mohanad Shab Kaleia
+ * contact : ms.kaleia@gmail.com
+ */
+function gridRenderWithOption(grid_id , option)
+{	
+	//get the data, option and control from ajax page with the url from action attribute in our grid table
+	var action = $("#"+grid_id).attr("action");
+				
+	//page number	
+	var page_number = option['page_number'];
+	
+	//search criteia
+	var search_keyword = option[1];	
+			
+	//add the option to the action
+	action += "/"+page_number; 
+			
+	//get the data using ajax function
+	gridAjaxRender(grid_id , action);					  				
+} 
+
+
+
+
+/**
+ * 
+ * function name : gridAjaxRender
+ * 
+ * Description : 
+ * execute ajax function with a given ajax url
+ * 
+ * parameter:
+ * action : the url where the php ajax functions is stored
+ * Created date ; 28-2-2013
+ * Modification date : ---
+ * Modfication reason : ---
+ * Author : Mohanad Shab Kaleia
+ * contact : ms.kaleia@gmail.com
+ */
+function gridAjaxRender(grid_id , ajax_url)
+{	
 	$.ajax({
 			  type: "POST",
-			  url: action,  
+			  url: ajax_url,  
 			  cache: false,
 			  success: function(json)
 						{
@@ -42,13 +129,16 @@ function gridRender(grid_id)
 			  		 		var control_obj = obj["control"];	
 			  		 		
 			  		 		//Option
-			  		 		var option = obj["option"];			  		 					  		 					  		 				  		 				  		 					  		 
+			  		 		var option_obj = obj["option"];			  		 					  		 					  		 				  		 				  		 					  		 
+							
+							//add function titles to thead
+							gridAddControlTitle(grid_id , control_obj);
 							
 							//add data and functions to the table			  		 					  		 					  		 					  							  			
-			  				gridAddRow(grid_id , data_obj , control_obj , option);
+			  				gridAddRow(grid_id , data_obj , control_obj , option_obj);
 			  				
 			  				//add pagination - search - add button - range of show
-			  				gridAddControlBar(grid_id , option);			  			
+			  				gridAddControlBar(grid_id , option_obj , data_obj);			  			
 			  				
 			  			}
 			  			catch(e) {
@@ -58,10 +148,8 @@ function gridRender(grid_id)
 			  	error: function(){
 			  		alert('Error while request..');
 			  	}
-			  });			  				  
-} 
-
-
+			  });
+}
 
 /**
  * function name : gridAddRow
@@ -79,27 +167,28 @@ function gridRender(grid_id)
  */
 function gridAddRow(grid_id , data , control , option)
 {
+		
+		//remove all row from the last page to append new ones
+		var $grid = $("#"+grid_id).find("tr.grid-row").remove();
+		
 		//get the number of rows from data 
 		var numberOfRows = Object.keys(data).length;
 		
 		//get first row (the row that contain database column name by "col" attribute)
 		var $thead =  $('#'+grid_id).find("tr:first");
-		
-		//add function titles to thead
-		gridAddControlTitle(grid_id , control);
-					
+								
 		//get the number of td inside tr
 		var numberOfTd = $thead.children('td').length;
 		
 		//if the row number option is set to true then add th in the first
 		if(option['row_number'])
-			$thead.find("th:first").before("<th col='row_num'>#</th>");
+			$thead.find("th:first").before("<th class='grid-th' col='row_num'>#</th>");
 				
 		//add row and data cell
 		for(i=0;i<numberOfRows;i++)
 		{											
 			//add new row to the table
-			$('#'+grid_id).append('<tr></tr>');					
+			$('#'+grid_id).append('<tr class="grid-row"></tr>');					
 			
 			//adding td
 			$thead.find("th").each(function(){
@@ -143,6 +232,10 @@ function gridAddRow(grid_id , data , control , option)
  */
 function gridAddControlTitle(grid_id , control)
 {
+	
+	//remove all th that added by grid to ot duplicate it when loading new data
+	var $grid = $("#"+grid_id).find("th.grid-th").remove();
+	
 	//number of contorls 
 	var numberOfControls = Object.keys(control).length;		
 	
@@ -151,7 +244,7 @@ function gridAddControlTitle(grid_id , control)
 			
 	for(title_counter = 0; title_counter < numberOfControls;title_counter++)
 	{
-		$('#'+grid_id).find("tr:first").append("<th>"+ control[title_counter]['title']  +"</th>")
+		$('#'+grid_id).find("tr:first").append("<th class='grid-th'>"+ control[title_counter]['title']  +"</th>")
 	}
 	
 	
@@ -278,15 +371,18 @@ function gridConfirm(message , url)
  * Author : Mohanad Shab Kaleia
  * contact : ms.kaleia@gmail.com
  */
-function gridAddControlBar(grid_id , option)
+function gridAddControlBar(grid_id , option , data)
 {		
+		//remove the control bar to change it and insert new one
+		var $grid = $("#grid_bar").remove();
+		
 		//reach grid table
 		var $grid =  $('#'+grid_id);
 		
 		//control bar
 		var bar = "";
 		
-		bar+= '<div class="well well-small">';
+		bar+= '<div id="grid_bar"   class="well well-small">';
 		bar+= '<div class="row-fluid">';
 		
 		//if add button is true then show add button with given url
@@ -298,18 +394,39 @@ function gridAddControlBar(grid_id , option)
 		}
 		
 		//show row count
+		var current_page = option['current_page'];
+		var page_size = option['page_size'];
+		var total_size = option['total_size'];
+		var number_of_pages = Math.ceil(total_size/page_size);
+
+		//compute the start index and the end index for showing data
+		var start_index = (current_page - 1)*page_size + 1;
+		var end_index = (start_index -1) + page_size;
+		if(end_index > total_size)	end_index = total_size;
+		
+		
 		bar+='<div class="span1">';
-		bar+='<span class="grid-pagination">1-10</span>';
+		bar+='<span class="grid-pagination">'+start_index+'-'+end_index+'</span>';
 		bar+='</div>';
 		
 		//pagination
+		//compute the prev and next
+		var prev_index = current_page*1 - 1;
+		//class of prev button
+		var prev_class="";
+		
+		var next_index = current_page*1 + 1;			
+		var next_class="";
+		
+		if(prev_index < 1) {prev_index = 1 ; prev_class = "active";}
+		if(next_index > number_of_pages) {next_index = number_of_pages ; next_class = "active";}
+		
 		bar+='<div class="span5">';
-		bar+='<div class="pagination pagination-centered">';
-		bar+='<ul>';
-		bar+='<li class="disabled" ><a href="#">&laquo;</a></li>';
-		bar+='<li class="active"><a href="#1">1</a></li>';
-		bar+='<li class=""><a href="#2">2</a></li>';																			
-		bar+='<li class="" title="next"><a href="#2">&raquo;</a></li>	';															
+		bar+='<div class="pagination pagination-centered grid-pagination">';
+		bar+='<ul>';		
+		bar+='<li class="'+prev_class+'" title="Prev" onclick="gridGotoPage(\'' + grid_id + '\'  , ' + prev_index + ' );" ><a href="#">&laquo; Prev</a></li>';				
+		bar+='<li class="'+next_class+'" title="Next" onclick="gridGotoPage(\'' + grid_id + '\'  , ' + next_index + ' );"><a href="#">Next &raquo;</a></li>';		
+		bar+='<li class=""><input id="page_number" type="text" value="'+current_page+'" onkeypress="gridPageInput(event , \'' + grid_id + '\')"></li>';																	
 		bar+='</ul>';								
 		bar+='</div>';										
 		bar+='</div>';		  		
@@ -332,3 +449,180 @@ function gridAddControlBar(grid_id , option)
 }
 
 
+/**
+ * function name: gridHashReader
+ * 
+ * Description: 
+ * This function will read the hash from the url and split it to get grid option like page number and search criteria
+ * 
+ * note:
+ * As we are using the hash in the url to pass grid option we have to  make sure about its form and it will be like this:
+ * 
+ * user=1-mohanad-xxxx-xxxx&user2=3-kaleia-xxxx
+ * 
+ * where user is grid name , user2 is another grid 
+ * xx-xx-xx-xx
+ * first option will be page number
+ * second is the search keyword
+ * 
+ * Parameters:
+ * grid_id: grid id
+ * Created date ; 16-3-2013
+ * Modification date : ---
+ * Modfication reason : ---
+ * Author : Mohanad Shab Kaleia
+ * contact : ms.kaleia@gmail.com
+ */
+function gridHashReader(grid_id)
+{		
+	//return the hash code as "#user=1-search-"
+	var hash_options = window.location.hash;
+	
+	//if there is no hash options in the url then exit the function
+	if(hash_options == "")
+		return;
+	
+	try
+	{
+		
+			
+		//remove the hash character
+		hash_options = hash_options.slice(1 , hash_options.length);
+		
+		/*split the hash option array to an arrays for each grid
+		 * example: if the hash option is user1=2-mohanad&user2=4-55
+		 * then it will be returned as an array 
+		 * hash_option_array[0] = user1=2-mohanad
+		 * hash_option_array[1] = user2=4-55
+		 * 
+		 * the split character is '&'
+		 */
+		var hash_options_array = hash_options.split("&");
+		
+		//current grid option
+		var grid_option;
+		
+		//current grid counter will used in the for loop
+		var current_grid = 0;
+		
+		//scan all options to determine which one is for me
+		for(current_grid = 0 ; current_grid < hash_options_array.length ; current_grid++)
+		{
+			grid_option = hash_options_array[current_grid];
+			
+			//split the option by '=' chracter
+			grid_option = grid_option.split("=");
+			
+			//if the current grid is our working grid then return 
+			if(grid_option[0] == grid_id)
+			{			
+				break;
+			}								
+		}
+		
+		//after we have finished the loop we have the index of our grid option stored in cuurent_grid. 
+		grid_option = hash_options_array[current_grid];
+		
+		//first we have to slice the options to remove grid name  
+		grid_option = grid_option.slice(grid_id.length + 1 , grid_option.length);
+		
+		//now we want to split the options by '-' charachter
+		grid_option_array = grid_option.split('-');
+		
+		return grid_option_array;
+	
+	}
+	
+	catch(e)
+	{
+		//the hash code is not work, but don't panic nothing will happen :)		
+	}
+}
+
+
+
+
+
+/**
+ * function name: gridGotoPage
+ * 
+ * Description: 
+ * this function will get the next page data
+ * 
+ * Parameters:
+ * grid_id: grid id
+ * page_number : as we want to go to another page then we have to pass page number value
+ * Created date ; 16-3-2013
+ * Modification date : ---
+ * Modfication reason : ---
+ * Author : Mohanad Shab Kaleia
+ * contact : ms.kaleia@gmail.com
+*/
+function gridGotoPage(grid_id , page_number)
+{
+	
+	//set option values
+	var option = new Array();
+	
+	//set page number
+	option['page_number'] = page_number;
+	
+	//update hash history
+	gridUpdateHistory(grid_id , option , 'page_number');
+	
+	
+	//get data with the option
+	gridRenderWithOption(grid_id , option);
+	
+}
+
+
+
+
+/**
+ * function name: gridPageInput
+ * 
+ * Description: 
+ * this function will listen to input and
+ * 
+ * Parameters:
+ * grid_id: grid id
+ * page_number : as we want to go to another page then we have to pass page number value
+ * Created date ; 16-3-2013
+ * Modification date : ---
+ * Modfication reason : ---
+ * Author : Mohanad Shab Kaleia
+ * contact : ms.kaleia@gmail.com
+*/
+function gridPageInput(key_event , grid_id)
+{		
+		var key=key_event.keyCode || key_event.which;		
+		if (key==13) //13 for enter key ascii code
+		{	
+			var page_number = $("#page_number").val();					
+			gridGotoPage(grid_id , page_number);
+		}
+} 
+
+
+/**
+ * function name: gridUpdateHistory
+ * 
+ * Description: 
+ * this function read the hash code url and then update it with a given option value
+ * 
+ * Parameters:
+ * grid_id: grid id
+ * option : an option that we want to update in the URL
+ * option['page_number'] = 1
+ * option_type: option type that we want to replace with for example: page_number
+ * Created date ; 26-3-2013
+ * Modification date : ---
+ * Modfication reason : ---
+ * Author : Mohanad Shab Kaleia
+ * contact : ms.kaleia@gmail.com
+*/
+function gridUpdateHistory(grid_id , option , option_type)
+{		
+		
+}

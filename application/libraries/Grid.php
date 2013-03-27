@@ -23,10 +23,12 @@ class Grid
 						"sortable"=>true , 
 						"search"=>true , 
 						"page_size"=>10 , 
+						"current_page" => 1 ,
 						"row_number"=>true,
 						"add_button" => true , 
 						"add_title" => "Add new",
-						"add_url" => "");
+						"add_url" => "" , 
+						"total_size"=>0);
 	var $data = array();//data to displayed in the grid in total
 	var $control = array();//control button array {edit, delete, ...}
 	
@@ -42,8 +44,13 @@ class Grid
 	 * sortable : sortable (true by default)
 	 * search : search the records (true by default)
 	 * page_size : default page size is 10 row per page
+	 * current_page : current page to be shown
+	 * row_number : if true then show row number
 	 * add_button : show add button below the grid to enable add records
 	 * add_url : the url to add record page
+	 * tatoal_size : this is a private variable so you don't have to change it 
+	 * it is equal to data.length where the data is the total data
+	 * 
 	 * 
 	 * control array example
 	 * array(
@@ -73,6 +80,9 @@ class Grid
 	 */
     public function gridRender()
     {
+		//set the total size of the data
+		$this->option['total_size'] = count($this->data);
+		
 			
 		//sort the data
 		
