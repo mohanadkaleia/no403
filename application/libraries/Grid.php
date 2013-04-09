@@ -82,8 +82,7 @@ class Grid
     {
 		//set the total size of the data
 		$this->option['total_size'] = count($this->data);
-		
-			
+					
 		//sort the data
 		
 		

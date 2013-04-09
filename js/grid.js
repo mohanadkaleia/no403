@@ -43,12 +43,9 @@ function gridRender(grid_id)
 		
 		//search criteia
 		var search_keyword = grid_option[1];	
-	}
-			
+	}					
 	//add the option to the action
 	action += "/"+page_number; 
-	
-	
 			
 	//get the data using ajax function
 	gridAjaxRender(grid_id , action);					  				
@@ -81,11 +78,19 @@ function gridRenderWithOption(grid_id , option)
 	var page_number = option['page_number'];
 	
 	//search criteia
-	var search_keyword = option[1];	
-			
-	//add the option to the action
-	action += "/"+page_number; 
-			
+	var search_keyword = option[1];
+	
+	//sorting
+	var sort_column = option[2];
+	var sort_type = option[3]; //it will be {desc, acs or none}	
+				
+	if(page_number !="")
+	{
+		//add the option to the action
+		action += "/"+page_number;	
+	}
+	
+	alert(action);
 	//get the data using ajax function
 	gridAjaxRender(grid_id , action);					  				
 } 
@@ -109,7 +114,7 @@ function gridRenderWithOption(grid_id , option)
  * contact : ms.kaleia@gmail.com
  */
 function gridAjaxRender(grid_id , ajax_url)
-{	
+{		
 	$.ajax({
 			  type: "POST",
 			  url: ajax_url,  
@@ -424,8 +429,8 @@ function gridAddControlBar(grid_id , option , data)
 		bar+='<div class="span5">';
 		bar+='<div class="pagination pagination-centered grid-pagination">';
 		bar+='<ul>';		
-		bar+='<li class="'+prev_class+'" title="Prev" onclick="gridGotoPage(\'' + grid_id + '\'  , ' + prev_index + ' );" ><a href="#">&laquo; Prev</a></li>';				
-		bar+='<li class="'+next_class+'" title="Next" onclick="gridGotoPage(\'' + grid_id + '\'  , ' + next_index + ' );"><a href="#">Next &raquo;</a></li>';		
+		bar+='<li class="'+prev_class+'" title="Prev" onclick="gridGotoPage(\'' + grid_id + '\'  , ' + prev_index + ' );" ><a>&laquo; Prev</a></li>';				
+		bar+='<li class="'+next_class+'" title="Next" onclick="gridGotoPage(\'' + grid_id + '\'  , ' + next_index + ' );"><a>Next &raquo;</a></li>';		
 		bar+='<li class=""><input id="page_number" type="text" value="'+current_page+'" onkeypress="gridPageInput(event , \'' + grid_id + '\')"></li>';																	
 		bar+='</ul>';								
 		bar+='</div>';										
@@ -487,8 +492,7 @@ function gridHashReader(grid_id)
 		
 			
 		//remove the hash character
-		hash_options = hash_options.slice(1 , hash_options.length);
-		
+		hash_options = hash_options.slice(1 , hash_options.length);		
 		/*split the hash option array to an arrays for each grid
 		 * example: if the hash option is user1=2-mohanad&user2=4-55
 		 * then it will be returned as an array 
@@ -623,6 +627,73 @@ function gridPageInput(key_event , grid_id)
  * contact : ms.kaleia@gmail.com
 */
 function gridUpdateHistory(grid_id , option , option_type)
-{		
+{	
+	var hash_original;
+	var hash_updated;
+	var hash_original_string;
+	var hash_updated_string;
+	
+			
+	//return the hash code as "#user=1-search-" this is the original one (before updated)
+	var hash_original_string = window.location.hash;
+	
+	//if the hash code is empty then create a new one
+	if(hash_original_string == "")
+	{
+		if(option_type == "page_number")
+		{
+			hash_updated_string = "#"+grid_id+"="+option[option_type];
+		}			
+		else if(option_type == "search")
+		{	
+			//here I suppos that the default page is the first page		
+			hash_updated_string = "#"+grid_id+"=1-"+option[option_type];
+		}							
+	}	
+	else
+	{
+		//read the hash history that is related to our grid
+		hash_original =  gridHashReader(grid_id);
 		
+		//we assign the old hash with the new empty one to update it and to make a copy of the original
+		hash_updated =  gridHashReader(grid_id);
+		 
+		//modify the hash history with the given option value and type
+		switch(option_type)
+		{
+			case "page_number":
+			hash_updated[0] = option[option_type];
+			break;
+			
+			case "search":
+			hash_updated[1] = option[option_type];
+			break;
+		}
+					
+		
+		//replace the new value with the prev one
+		//but before that we need to change the form of the hash history from array to string
+		 		
+		hash_updated_string = grid_id + "="; 
+		hash_original_string = grid_id + "=";
+		for(i=0 ; i< hash_original.length ; i++)
+		{
+			hash_updated_string+=hash_updated[i];			
+			hash_original_string +=hash_original[i];
+			
+			if(i < (hash_original.length-1))
+			{
+				hash_updated_string+="-";
+				hash_original_string += "-";
+			}							
+		}
+		
+		
+		var hash = window.location.hash;
+		
+		hash_updated_string = hash.replace(hash_original_string , hash_updated_string);
+		
+	}
+		
+	window.location.hash = hash_updated_string;										
 }

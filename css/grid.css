@@ -108,3 +108,8 @@
 	border-top-left-radius: 0px;
 	color:#08C;
 }
+
+.grid-pagination ul li a
+{
+	cursor: pointer;
+}

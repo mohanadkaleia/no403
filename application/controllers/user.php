@@ -62,9 +62,7 @@ class User extends CI_Controller
 	 * contact : ms.kaleia@gmail.com
 	 */
 	public function manageUser()
-	{				
-			
-			
+	{										
 		//set the active tab page
 		$data["user"] = "active";	
 		
@@ -90,6 +88,8 @@ class User extends CI_Controller
 	 */
 	public function ajaxGetUsers($page_number = 1)
 	{
+		//print_r($_POST);
+								
 		//load user model to get data from it
 		$this->load->model('user_model');
 		
@@ -108,7 +108,7 @@ class User extends CI_Controller
 		$this->grid->option['add_title'] = "Add new"; //add title
 			
 		
-		//get the data
+		//get the data	
 		$this->grid->data = $this->user_model->getAll();
 		
 		//grid controls
@@ -116,14 +116,13 @@ class User extends CI_Controller
 									  array("title" => "Edit" , "icon"=>"icon-pencil" , "url"=>base_url()."user/editUser" , "message_type"=>null , "message"=>"") , 
 									  array("title" => "Delete" , "icon"=>"icon-trash" ,"url"=>base_url()."user/deleteUser" , "message_type"=>"confirm" , "message"=>"Are you sure?")
 									);
-		
-		//set private attribute
+											
+		//set private attribute	
 		$this->grid->current_page = $page_number;
-		
-				
+						
 		//render our grid :)
-		echo $this->grid->gridRender();				
-							
+		echo $this->grid->gridRender();
+												
 	}
 	
 	
