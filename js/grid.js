@@ -17,38 +17,43 @@
  * contact : ms.kaleia@gmail.com
  */
 function gridRender(grid_id)
-{	
+{				
 	//get the data, option and control from ajax page with the url from action attribute in our grid table
 	var action = $("#"+grid_id).attr("action");
-	
-				
+					
 	//get the hash from the url
 	var grid_option = gridHashReader(grid_id);	
 	
+	//set option values that we will pass to ajaxGridRender
+	var option = new Array();	
 	//if there is no hash option is passed then use the default	
 	if(grid_option == null)
 	{
 		//page number by default is 1
-		page_number = 1;
-		
+		//page_number = 1;
+		option['page_number'] = 1;
 		//search keyword
-		search = "";
+		option['search'] = "";			
 		
 		//sort
 	}
 	else
-	{
+	{				
+		//set page number
+		option['page_number'] = grid_option[0];
+		
+		//set search criteria
+		option['search'] = grid_option[1];			
+		
 		//page number	
-		var page_number = grid_option[0];
+		//var page_number = grid_option[0];
 		
 		//search criteia
-		var search_keyword = grid_option[1];	
-	}					
-	//add the option to the action
-	action += "/"+page_number; 
-			
+		//var search_keyword = grid_option[1];	
+	}						
+		
 	//get the data using ajax function
-	gridAjaxRender(grid_id , action);					  				
+	gridAjaxRender(grid_id , action , option);					  				
 } 
 
 
@@ -83,16 +88,10 @@ function gridRenderWithOption(grid_id , option)
 	//sorting
 	var sort_column = option[2];
 	var sort_type = option[3]; //it will be {desc, acs or none}	
-				
-	if(page_number !="")
-	{
-		//add the option to the action
-		action += "/"+page_number;	
-	}
-	
-	alert(action);
+
+		
 	//get the data using ajax function
-	gridAjaxRender(grid_id , action);					  				
+	gridAjaxRender(grid_id , action , option);					  				
 } 
 
 
@@ -106,26 +105,31 @@ function gridRenderWithOption(grid_id , option)
  * execute ajax function with a given ajax url
  * 
  * parameter:
- * action : the url where the php ajax functions is stored
+ * grid_id : the grid which we want to render
+ * ajax_url : the url where the php ajax functions is stored
+ * option : array of the option {page_number , search , sort}
  * Created date ; 28-2-2013
  * Modification date : ---
  * Modfication reason : ---
  * Author : Mohanad Shab Kaleia
  * contact : ms.kaleia@gmail.com
  */
-function gridAjaxRender(grid_id , ajax_url)
+function gridAjaxRender(grid_id , ajax_url , option)
 {		
 	$.ajax({
 			  type: "POST",
-			  url: ajax_url,  
+			  url: ajax_url,			   
 			  cache: false,
+			  data:{
+		  		page_number:option['page_number']
+		  		},
 			  success: function(json)
 						{
 			  		    try
 			  		    {			  		    				  		   
 			  		 		var obj = jQuery.parseJSON(json);
 			  		 		
-			  		 		/*Read grid parameters*/
+			  		 		//Read grid parameters
 			  		 		
 			  		 		//data oject	
 			  		 		var data_obj = obj["data"];

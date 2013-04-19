@@ -15,7 +15,7 @@
  */
  
 class Grid 
-{		
+{					
 	//attribute
 	var $option = array(
 						"title"=>"" , 
@@ -28,14 +28,13 @@ class Grid
 						"add_button" => true , 
 						"add_title" => "Add new",
 						"add_url" => "" , 
-						"total_size"=>0);
+						"total_size"=>0,
+						"offset" => 0);
 	var $data = array();//data to displayed in the grid in total
 	var $control = array();//control button array {edit, delete, ...}
 	
-	//private attribute
-	var $offset = 0; //this variable is used to determin data array index to be shown
-	var $limited_data = array(); //the data after limit its size to match page_size 
-	var $current_page = 1;
+	//private attribute	
+	var $limited_data = array(); //the data after limit its size to match page_size 	
 	 
 	/*
 	 * option array 
@@ -50,7 +49,8 @@ class Grid
 	 * add_url : the url to add record page
 	 * tatoal_size : this is a private variable so you don't have to change it 
 	 * it is equal to data.length where the data is the total data
-	 * 
+	 * offset :this variable is used to determin data array index to be shown 
+	 * for example if the offset is 10 then the first data record will be shown from index 10
 	 * 
 	 * control array example
 	 * array(
@@ -79,7 +79,15 @@ class Grid
 	 * contact : ms.kaleia@gmail.com
 	 */
     public function gridRender()
-    {
+    {			
+		//get page number from post array
+		if(isset($_POST["page_number"]))
+		{
+			$this->option["current_page"] = $_POST["page_number"];	
+		}
+			
+			
+			
 		//set the total size of the data
 		$this->option['total_size'] = count($this->data);
 					
@@ -89,9 +97,7 @@ class Grid
 		
 		
 		//match limit size
-    	$this->gridLimitData();
-    	
-    	
+    	$this->gridLimitData();    	    
     	
 		//return the array objects as encoded json to send it to JavasScipt
 		$json_array = array(
@@ -100,6 +106,8 @@ class Grid
 							"option"=>$this->option 
 							);							
     	return json_encode($json_array);
+		
+		
     }
 	
 	
@@ -120,7 +128,7 @@ class Grid
     	//calculate the offset that will be used in array slice to get limited data
     	$this->gridOffset()	;
 			
-    	$this->limited_data =  array_slice($this->data, $this->offset, $this->option['page_size']);
+    	$this->limited_data =  array_slice($this->data, $this->option['offset'], $this->option['page_size']);
 	}
 	
 	
@@ -146,7 +154,8 @@ class Grid
 		 * offset (2-1)*2 = 2
     	*/
     	    	
-    	$this->offset = ($this->current_page - 1)*$this->option['page_size'];					
+    	$this->option["offset"] = ($this->option["current_page"] - 1)*$this->option['page_size'];    	
+    	//$this->offset = ($this->option["current_page"] - 1)*$this->option['page_size'];					
 	}
 	
 }
