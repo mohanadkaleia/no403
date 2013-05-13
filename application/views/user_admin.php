@@ -13,7 +13,7 @@
 		<div class="grid">
 			<table id="user" class="grid" action="<?php echo base_url();?>user/ajaxGetUsers" dir="ltr">				
 				<tr>																
-					<th col="id" type="text" onclick="alert('sorting');">ID</th>
+					<th col="id" type="text">ID</th>
 					<th col="name" type="text">User name</th>
 					<th col="email"  type="text">Email</th>		
 					<th col="created_date" type="date">Created date</th>

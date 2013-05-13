@@ -45,11 +45,11 @@ function gridRender(grid_id)
 		//set search criteria
 		option['search'] = grid_option[1];			
 		
-		//page number	
-		//var page_number = grid_option[0];
-		
-		//search criteia
-		//var search_keyword = grid_option[1];	
+		//sort column
+		option['sort_column'] = grid_option[2];
+				
+		//sort dir
+		option['sort_dir']  = grid_option[3];	
 	}						
 		
 	//get the data using ajax function
@@ -59,7 +59,7 @@ function gridRender(grid_id)
 
 
 /**
- * function name : gridRender
+ * function name : gridRenderWithOption
  * 
  * Description : 
  * read the data and then build the grid table
@@ -83,11 +83,11 @@ function gridRenderWithOption(grid_id , option)
 	var page_number = option['page_number'];
 	
 	//search criteia
-	var search_keyword = option[1];
+	var search_keyword = option['search'];
 	
 	//sorting
-	var sort_column = option[2];
-	var sort_type = option[3]; //it will be {desc, acs or none}	
+	var sort_column = option['sort_column'];
+	var sort_type = option['sort_dir']; //it will be {desc, acs or none}	
 
 		
 	//get the data using ajax function
@@ -115,18 +115,23 @@ function gridRenderWithOption(grid_id , option)
  * contact : ms.kaleia@gmail.com
  */
 function gridAjaxRender(grid_id , ajax_url , option)
-{		
+{				
 	$.ajax({
 			  type: "POST",
 			  url: ajax_url,			   
 			  cache: false,
-			  data:{
-		  		page_number:option['page_number']
+			  data:{			  	
+		  		page_number:option['page_number'] ,
+		  		sort_column:option['sort_column'] , 		  		
+		  		sort_dir:option['sort_dir']
 		  		},
+		  		
+		  		data: { name: "John", location: "Boston" },
 			  success: function(json)
 						{
 			  		    try
-			  		    {			  		    				  		   
+			  		    {				  		    				  		    	
+			  		    			  		    				  		   
 			  		 		var obj = jQuery.parseJSON(json);
 			  		 		
 			  		 		//Read grid parameters
@@ -139,6 +144,13 @@ function gridAjaxRender(grid_id , ajax_url , option)
 			  		 		
 			  		 		//Option
 			  		 		var option_obj = obj["option"];			  		 					  		 					  		 				  		 				  		 					  		 
+							
+							//add sorting funcion to column
+							gridAddSorting(grid_id);
+							
+							//add sorting direction symbol to the column
+							if(option['sort_column']!=null)
+								gridAddSortDir(grid_id , option['sort_column'] , option['sort_dir']);
 							
 							//add function titles to thead
 							gridAddControlTitle(grid_id , control_obj);
@@ -229,7 +241,7 @@ function gridAddRow(grid_id , data , control , option)
  * function name : gridAddControlTitle
  * 
  * Description : 
- * Add functions title to the thead of grid table
+ * Add functions title to the "thead" of grid table
  * 
  * Parameters :
  * Json data array
@@ -254,10 +266,43 @@ function gridAddControlTitle(grid_id , control)
 	for(title_counter = 0; title_counter < numberOfControls;title_counter++)
 	{
 		$('#'+grid_id).find("tr:first").append("<th class='grid-th'>"+ control[title_counter]['title']  +"</th>")
-	}
-	
-	
+	}		
 }
+
+
+/**
+ * function name : gridAddSorting
+ * 
+ * Description : 
+ * Add sorting function to the column onclick
+ * 
+ * Parameters :
+ * Json data array
+ * Created date ; 30-4-2013
+ * Modification date : ---
+ * Modfication reason : ---
+ * Author : Mohanad Shab Kaleia
+ * contact : ms.kaleia@gmail.com
+ */
+function gridAddSorting(grid_id)
+{
+	
+	//remove all th that added by grid to ot duplicate it when loading new data
+	var $grid = $("#"+grid_id).find("tr:first th");
+	
+	$grid.each(function(){
+		//get column name
+		col_name = $(this).attr('col');				
+				
+		//if there is sorting before then don't set a sort function
+		if($(this).attr('onclick')==null)		
+		{
+			//assign sort onclick function
+			$(this).attr('onclick', 'gridSortColumn("'+grid_id+'", "'+col_name+'" , "asc")'); //the default sort dir is asc						
+		}									
+	});
+}
+
 
 
 /**
@@ -294,11 +339,7 @@ function gridAddControlRow(grid_id , control , data , option , row_id)
 		
 	for(control_counter=0;control_counter<numberOfControls;control_counter++)
 	{
-		var database_id = option['id']; //database table primary key
-		var title = option['title'];   // grid title
-		var sortable = option['sorable'];   // is columns sortable
-		var search = option['search'];   // grid search
-		
+		var database_id = option['id']; //database table primary key				
 		
 		var append_text="";
 		
@@ -492,9 +533,7 @@ function gridHashReader(grid_id)
 		return;
 	
 	try
-	{
-		
-			
+	{					
 		//remove the hash character
 		hash_options = hash_options.slice(1 , hash_options.length);		
 		/*split the hash option array to an arrays for each grid
@@ -570,10 +609,23 @@ function gridGotoPage(grid_id , page_number)
 {
 	
 	//set option values
-	var option = new Array();
+	var option = new Array();	
 	
 	//set page number
 	option['page_number'] = page_number;
+	
+	//get the other options
+	hash_option = gridHashReader(grid_id);
+	
+	if(hash_option!= null)
+	{				
+		//search keyword
+		option['search'] = hash_option[1];
+		
+		//sort optoions
+		option['sort_column'] = hash_option[2];
+		option['sort_dir'] = hash_option[3];
+	}
 	
 	//update hash history
 	gridUpdateHistory(grid_id , option , 'page_number');
@@ -585,7 +637,149 @@ function gridGotoPage(grid_id , page_number)
 }
 
 
+/**
+ * function name: gridSortColumn
+ * 
+ * Description: 
+ * this function send column name and sorting direction to be rendered
+ * 
+ * Parameters:
+ * grid_id: grid id
+ * column_name : column name
+ * dir: {desc , asc}
+ * Created date ; 30-4-2013
+ * Modification date : ---
+ * Modfication reason : ---
+ * Author : Mohanad Shab Kaleia
+ * contact : ms.kaleia@gmail.com
+*/
+function gridSortColumn(grid_id , column_name , dir)
+{				
+	//update the sort direction of the column so if it is desc then make it asc, if asc make it none		
+	var $thead =  $('#'+grid_id).find("tr:first");		
+	
+	$thead.find("th").each(function(){
+	//get columm name
+	var col_name = $(this).attr("col");	
+			
+	if(col_name == column_name)
+	{		
+		if(dir=="asc")
+		{																													
+			$(this).attr('onclick', 'gridSortColumn("'+grid_id+'", "'+column_name+'" , "desc")');																
+		}						
+		else if(dir=="desc")
+		{						
+			$(this).attr('onclick', 'gridSortColumn("'+grid_id+'", "'+column_name+'", "none")');		
+		}						
+		else
+		{						
+			$(this).attr('onclick', 'gridSortColumn("'+grid_id+'", "'+column_name+'" , "asc")');
+		}										
+	}
+	else
+	{
+		//remove the dir icon from every column except the sorted one						
+		$(this).find("span").remove();
+	}
+																								
+	});
+	
+	//add sorting direction symbol to the column
+	gridAddSortDir(grid_id , column_name , dir);
+	
+	
+	
+	
+	//set option values
+	var option = new Array();
+		
+	//get the other options
+	hash_option = gridHashReader(grid_id);
+	
+	if(hash_option!= null)
+	{
+		//set page number
+		option['page_number'] = hash_option[0];		
+		
+		//search keyword
+		option['search'] = hash_option[1];	
+	}
+	
+	
+	//set column name
+	option['sort_column'] = column_name;
+	
+	//set sort direction
+	option['sort_dir'] = dir;
+	
+	//update hash history
+	gridUpdateHistory(grid_id , option , 'sort');
+	
+	
+	//get data with the option
+	gridRenderWithOption(grid_id , option);
+	
+}
 
+
+/**
+ * function name: gridAddSortDir
+ * 
+ * Description: 
+ * this function will add sorting direction to column
+ * 
+ * Parameters:
+ * grid_id: grid id
+ * column_name : column name
+ * dir: {desc , asc}
+ * Created date ; 30-4-2013
+ * Modification date : ---
+ * Modfication reason : ---
+ * Author : Mohanad Shab Kaleia
+ * contact : ms.kaleia@gmail.com
+*/
+function gridAddSortDir(grid_id , column_name , dir)
+{
+		//update the sort direction of the column so if it is desc then make it asc, if asc make it none		
+		var $thead =  $('#'+grid_id).find("tr:first");		
+		
+		$thead.find("th").each(function(){
+		//get columm name
+		var col_name = $(this).attr("col");	
+				
+		if(col_name == column_name)
+		{		
+			if(dir=="asc")
+			{																																																																					
+				//remove the dir icon						
+				$(this).find("span").remove();
+				
+				//add new dir icon
+				$(this).append("  <span><i class='icon-chevron-up'></i></span>");						
+			}						
+			else if(dir=="desc")
+			{														
+				//remove the dir icon						
+				$(this).find("span").remove();
+				
+				//add new dir icon
+				$(this).append("  <span><i class='icon-chevron-down'></i></span>");
+			}						
+			else
+			{							
+				//remove the dir icon						
+				$(this).find("span").remove();
+			}													
+		}
+		else
+		{
+			//remove the dir icon from every column except the sorted one						
+			$(this).find("span").remove();
+		}
+																									
+	});
+}
 
 /**
  * function name: gridPageInput
@@ -647,15 +841,22 @@ function gridUpdateHistory(grid_id , option , option_type)
 		if(option_type == "page_number")
 		{
 			hash_updated_string = "#"+grid_id+"="+option[option_type];
+			hash_updated_string += "-null-null-null";
 		}			
 		else if(option_type == "search")
 		{	
 			//here I suppos that the default page is the first page		
 			hash_updated_string = "#"+grid_id+"=1-"+option[option_type];
+		}
+		else if(option_type == "sort")
+		{
+			//here I suppos that the default page is the first page	and no search keyword is passed	
+			hash_updated_string = "#"+grid_id+"=1-null-"+option['sort_column']+"-"+option['sort_dir'];
 		}							
 	}	
 	else
-	{
+	{				
+		
 		//read the hash history that is related to our grid
 		hash_original =  gridHashReader(grid_id);
 		
@@ -672,26 +873,32 @@ function gridUpdateHistory(grid_id , option , option_type)
 			case "search":
 			hash_updated[1] = option[option_type];
 			break;
+			
+			case "sort":			
+			hash_updated[2] = option["sort_column"];
+			hash_updated[3] = option["sort_dir"];			
+			break;
 		}
 					
 		
 		//replace the new value with the prev one
 		//but before that we need to change the form of the hash history from array to string
+		 
+	
 		 		
 		hash_updated_string = grid_id + "="; 
 		hash_original_string = grid_id + "=";
-		for(i=0 ; i< hash_original.length ; i++)
+		for(i=0 ; i< hash_updated.length ; i++)
 		{
 			hash_updated_string+=hash_updated[i];			
 			hash_original_string +=hash_original[i];
 			
-			if(i < (hash_original.length-1))
-			{
-				hash_updated_string+="-";
-				hash_original_string += "-";
+			if(i < (hash_updated.length-1))
+			{				
+				hash_updated_string+="-";				
+				hash_original_string += "-";				
 			}							
-		}
-		
+		}				
 		
 		var hash = window.location.hash;
 		

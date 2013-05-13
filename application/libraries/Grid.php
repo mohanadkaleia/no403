@@ -92,7 +92,15 @@ class Grid
 		$this->option['total_size'] = count($this->data);
 					
 		//sort the data
-		
+		if(isset($_POST["sort_column"]))
+		{
+			//get sorting column and dir	
+			$sort_column = $_POST["sort_column"];
+			$sort_dir = $_POST["sort_dir"];
+			
+			//sort the data array
+			$this->gridSort($sort_column , $sort_dir);	
+		}
 		
 		
 		
@@ -156,6 +164,98 @@ class Grid
     	    	
     	$this->option["offset"] = ($this->option["current_page"] - 1)*$this->option['page_size'];    	
     	//$this->offset = ($this->option["current_page"] - 1)*$this->option['page_size'];					
+	}
+	
+	
+	
+	/**
+	 * function name : gridSort
+	 * 
+	 * Description : 
+	 * sorting data array depending on column and dir
+	 * 
+	 * Created date ; 15-3-2013
+	 * Modification date : ---
+	 * Modfication reason : ---
+	 * Author : Mohanad Shab Kaleia
+	 * contact : ms.kaleia@gmail.com
+	 */
+    public function gridSort($sort_column , $sort_dir)
+    {    	    	    
+		//sorting the data array depending on the 
+		$this->data = $this->msort($this->data, $sort_column, $sort_dir);
+	}
+	
+	
+	
+	
+	/**
+	 * function name :msort
+	 * 
+	 * Description : 
+	 * sort 2d array by columns
+	 * parms:
+	 * 		$array : the array to be sorted
+	 * 		$sort_columns : array of columns that the array will sort by
+	 * 		$dir : array of direction
+	 * example: 
+	 * 
+	 * 		$data[] = array('volume' => 67, 'edition' => 2);
+			$data[] = array('volume' => 86, 'edition' => 1);
+			$data[] = array('volume' => 85, 'edition' => 6);
+			$data[] = array('volume' => 98, 'edition' => 2);
+			$data[] = array('volume' => 86, 'edition' => 6);
+			$data[] = array('volume' => 67, 'edition' => 7);	
+			$data = msort($data, 'volume' , 'DESC');
+	 * Created date ; 3-5-2013
+	 * Modification date : 
+	 * Modfication reason : 
+	 * Author : Mohanad Shab Kaleia
+	 * contact : ms.kaleia@gmail.com
+	 */
+	function msort($array, $sort_columns , $direction) 
+	{
+		$command_line = 'array_multisort(';
+		$to_sort_array = array();
+		$counter = 0;
+		
+		
+		//conver the input parameters from string to arrays
+		$column[] = $sort_columns;
+		$dir[] = $direction;
+		
+						
+		
+		foreach ($column as $column_key => $column_value)		
+		{
+			// Obtain a list of columns
+			foreach ($array as $key => $row) 			
+			{
+			    $to_sort_array[$counter][$key]  = $row[$column_value];			 
+			}			
+			
+			
+			$command_line .= '$to_sort_array['.$counter.'] , ';
+			
+			if($dir[$column_key] == 'asc')
+				$command_line.='SORT_ASC , ';
+			else if($dir[$column_key] == 'desc')
+			{
+				$command_line.='SORT_DESC ,';
+			} 
+			else
+			{
+				return $array;
+			}
+			
+			$counter++;						
+		}	
+		
+		$command_line.='$array);';
+		
+		eval($command_line);
+		
+		return $array;	 
 	}
 	
 }
