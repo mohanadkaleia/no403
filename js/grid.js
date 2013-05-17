@@ -44,7 +44,7 @@ function gridRender(grid_id)
 		
 		//set search criteria
 		option['search'] = grid_option[1];			
-		
+				
 		//sort column
 		option['sort_column'] = grid_option[2];
 				
@@ -116,17 +116,18 @@ function gridRenderWithOption(grid_id , option)
  */
 function gridAjaxRender(grid_id , ajax_url , option)
 {				
+	
+	
 	$.ajax({
 			  type: "POST",
 			  url: ajax_url,			   
 			  cache: false,
 			  data:{			  	
 		  		page_number:option['page_number'] ,
+		  		search:option['search'] ,
 		  		sort_column:option['sort_column'] , 		  		
 		  		sort_dir:option['sort_dir']
-		  		},
-		  		
-		  		data: { name: "John", location: "Boston" },
+		  		},		  				  		
 			  success: function(json)
 						{
 			  		    try
@@ -486,7 +487,7 @@ function gridAddControlBar(grid_id , option , data)
 		{
 			bar+='<div class="span4">';
 			bar+='<div class="input-append grid-search">'
-			bar+='<input class="span8" id="search" type="text">';
+			bar+='<input class="span8" id="grid_search" type="text" onkeypress="gridSearch(event , \'' + grid_id + '\')">';
 			bar+='<span class="add-on"><i class="icon-search"></i></span>';
 			bar+='</div>';
 			bar+='</div>';
@@ -846,7 +847,7 @@ function gridUpdateHistory(grid_id , option , option_type)
 		else if(option_type == "search")
 		{	
 			//here I suppos that the default page is the first page		
-			hash_updated_string = "#"+grid_id+"=1-"+option[option_type];
+			hash_updated_string = "#"+grid_id+"=1-"+option[option_type]+"-null-null";
 		}
 		else if(option_type == "sort")
 		{
@@ -908,3 +909,57 @@ function gridUpdateHistory(grid_id , option , option_type)
 		
 	window.location.hash = hash_updated_string;										
 }
+
+
+
+
+
+/**
+ * function name: gridSearch
+ * 
+ * Description: 
+ * this function will read the search input and them send option
+ * 
+ * Parameters:
+ * grid_id: grid id
+ * 
+ * Created date ; 14-5-2013
+ * Modification date : ---
+ * Modfication reason : ---
+ * Author : Mohanad Shab Kaleia
+ * contact : ms.kaleia@gmail.com
+*/
+function gridSearch(key_event , grid_id)
+{						
+		var key=key_event.keyCode || key_event.which;		
+		if (key==13) //13 for enter key ascii code
+		{	
+			var search_keyword = $("#grid_search").val();					
+			
+			//set option values
+			var option = new Array();	
+			
+			//set page number
+			option['search'] = search_keyword;
+			
+			//get the other options
+			hash_option = gridHashReader(grid_id);
+			
+			if(hash_option!= null)
+			{				
+				//search keyword
+				option['page_number'] = hash_option[0];
+				
+				//sort optoions
+				option['sort_column'] = hash_option[2];
+				option['sort_dir'] = hash_option[3];
+			}
+			
+			//update hash history
+			gridUpdateHistory(grid_id , option , 'search');
+			
+			
+			//get data with the option
+			gridRenderWithOption(grid_id , option);		
+		}
+} 

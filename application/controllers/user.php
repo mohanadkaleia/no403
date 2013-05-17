@@ -104,6 +104,7 @@ class User extends CI_Controller
 		$this->grid->option['add_url'] = base_url()."user/addUser"; //add url
 		$this->grid->option['add_title'] = "Add new"; //add title
 			
+		$this->grid->columns = array('id' , 'name' , 'email' , 'created_date');
 		
 		//get the data	
 		$this->grid->data = $this->user_model->getAll();

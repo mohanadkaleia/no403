@@ -30,7 +30,8 @@ class Grid
 						"add_url" => "" , 
 						"total_size"=>0,
 						"offset" => 0);
-	var $data = array();//data to displayed in the grid in total
+	var $columns = array(); //columns array 
+	var $data = array();//data to displayed in the grid in total	
 	var $control = array();//control button array {edit, delete, ...}
 	
 	//private attribute	
@@ -85,14 +86,19 @@ class Grid
 		{
 			$this->option["current_page"] = $_POST["page_number"];	
 		}
-			
-			
-			
-		//set the total size of the data
-		$this->option['total_size'] = count($this->data);
+												
+		
+		//seach the data
+		if(isset($_POST["search"]) && $_POST["search"]!="" && $_POST["search"]!="null")
+		{
+			$keyword = $_POST["search"];
+			$this->gridSearch($keyword);
+		}
+		
+		
 					
 		//sort the data
-		if(isset($_POST["sort_column"]))
+		if(isset($_POST["sort_column"]) && $_POST["sort_column"]!="" && $_POST["sort_column"]!="null")
 		{
 			//get sorting column and dir	
 			$sort_column = $_POST["sort_column"];
@@ -105,6 +111,9 @@ class Grid
 		
 		
 		//match limit size
+		//set the total size of the data
+		$this->option['total_size'] = count($this->data);
+		
     	$this->gridLimitData();    	    
     	
 		//return the array objects as encoded json to send it to JavasScipt
@@ -258,10 +267,73 @@ class Grid
 		return $array;	 
 	}
 	
+	
+	/**
+	 * function name : gridSearch
+	 * 
+	 * Description : 
+	 * search the data array with matched keyword
+	 * 
+	 * Created date ; 14-5-2013
+	 * Modification date : ---
+	 * Modfication reason : ---
+	 * Author : Mohanad Shab Kaleia
+	 * contact : ms.kaleia@gmail.com
+	 */
+    public function gridSearch($keyword)
+    {
+		//data array of matched rows wit keyword	
+		$data_found = array(); 	
+			
+		foreach ($this->columns as $column_name) 
+		{
+			$data_found = $data_found +  $this->search_like($this->data, $column_name, $keyword);
+		}	
+				
+		//return the matched data					
+		$this->data = $data_found;
+	}
+
+
+	
+	
+	
+	
+	/**
+	 * function name :search_like
+	 * 
+	 * Description : 
+	 * search an array by key and value , return like value rows
+	 * parms:
+	 * 		
+	 * example:
+	 * ----------------------------------------------
+	 * $arr = array(0 => array('id'=>1,'name'=>"cat 1"),
+             		1 => array('id'=>2,'name'=>"cat 2"),
+             		2 => array('id'=>3,'name'=>"cat 1"));
+	   print_r(search_like($arr, 'name', 'cat 1'));
+	 * -----------------------------------------------		
+	 * Created date ; 8-11-2012
+	 * Modification date : 
+	 * Modfication reason : 
+	 * Author : Mohanad Shab Kaleia
+	 * contact : ms.kaleia@gmail.com
+	 */
+	function search_like($array, $column, $keyword)
+	{
+	    $results = array();
+		
+		foreach ($array as $row) 
+		{
+			if(stripos($row[$column], $keyword) !== false)
+				$results[] = $row;	
+		}				
+	    return $results;
+	}
+			
 }
 
 
-
-
+	
 
 /* End of file Someclass.php */
