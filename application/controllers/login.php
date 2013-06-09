@@ -53,7 +53,7 @@ class Login extends CI_Controller
 		
 		//check validation
 		$this->form_validation->set_rules('email', 'Email', 'required|valid_email|callback_chkUser');	
-		$this->form_validation->set_rules('password', 'password', 'required|md5');				
+		$this->form_validation->set_rules('password', 'Password', 'required|md5');				
 		
 		//load login model
 		$this->load->model('login_model');
@@ -66,20 +66,21 @@ class Login extends CI_Controller
 			$username = $user_info[0]['username'];
 			//set session info
 			$data = array(
-				'username' => $username,
+				'user_id' => $user_info[0]['id'],
+				'username' => $user_info[0]['name'],
 				'email' => $email ,
 				'is_logged_in' => 1				
 			);
 			$this->session->set_userdata($data);
 				
 			//redirect to dashboard page
-			redirect('adminpanel/dashboard');		
+			redirect(base_url().'dashboard');		
 			return true;
 		}
 		else
 		{
 			//redirect to login page again
-			$this->loginUser();						
+			$this->index();						
 		}				
 	}	
 	
@@ -131,7 +132,7 @@ class Login extends CI_Controller
 		$this->session->sess_destroy();
 		
 		//redirect to login page
-		$this->loginUser();
+		$this->index();
 	}	
 }
 	

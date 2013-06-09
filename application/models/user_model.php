@@ -23,6 +23,7 @@ class User_model extends CI_Model
 	var $password = "";
 	var $email =  "";
 	var $permission = "ADMIN"; //by default there is no permission other the admin
+	var $user_id;
 	
 	
 	/**
@@ -49,10 +50,13 @@ class User_model extends CI_Model
 	 */
 	 public function add()
 	 {
+	 	//assign user id
+	 	$this->user_id = $this->session->userdata('user_id');
+		
 	 	$query = "insert into users 
-	 			  (name , password , email , permission , created_date  ,  is_deleted)
+	 			  (name , password , email , permission , creator_id ,  created_date  ,  is_deleted)
 	 			  values
-	 			  ('{$this->username}' , '{$this->password}' , '{$this->email}' , '{$this->permission}' , CURDATE() , 'F' ) 
+	 			  ('{$this->username}' , '{$this->password}' , '{$this->email}' , '{$this->permission}' , {$this->user_id} , CURDATE() , 'F' ) 
 	 				";	
 		$this->db->query($query);
 	 }
@@ -72,11 +76,16 @@ class User_model extends CI_Model
 	 */
 	 public function edit()
 	 {
+	 	
+		//assign user id
+	 	$this->user_id = $this->session->userdata('user_id');
+		
 	 	$query = "update users set
 	 			  name = '{$this->username}' , 
 	 			  password = '{$this->password}' , 
 	 			  email = '{$this->email}' , 
 	 			  permission = '{$this->permission}' , 
+	 			  modifier_id =  {$this->user_id} ,
 	 			  modified_date = CURDATE()	 
 	 			  where id = {$this->id}";
 
@@ -99,9 +108,13 @@ class User_model extends CI_Model
 	 * contact : ms.kaleia@gmail.com
 	 */
 	 public function delete()
-	 {	 	
+	 {
+	 	//assign user id
+	 	$this->user_id = $this->session->userdata('user_id');
+			 	
 	 	$query = "update users set
-	 			  is_deleted = 'T'
+	 			  is_deleted = 'T' , 
+	 			  modifier_id =  {$this->user_id}
 	 			  where id = {$this->id}";
 		$this->db->query($query);
 	 }
@@ -167,7 +180,7 @@ class User_model extends CI_Model
 	 */
 	public function chkUserIsExist($id=null)
 	{		
-		$query = "select * from users where email='{$this->email}'";
+		$query = "select * from users where email='{$this->email}' and is_deleted='F'";
 		if(isset($id) & $id!=null)
 		{			
 			$query.=" and id<>{$id}";

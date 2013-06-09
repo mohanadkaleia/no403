@@ -16,6 +16,15 @@
 class Dashboard extends CI_Controller
 {
 	
+	public function __construct()
+	{
+		parent::__construct();
+		// Your own constructor code
+		if($this->session->userdata('is_logged_in')!=1)
+			redirect(base_url().'login');					
+	}
+	
+	
 	
 	public function index()
 	{

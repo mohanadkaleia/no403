@@ -5,9 +5,12 @@
 	
 	//error message
 	
+	 
+	
+	
 	if(validation_errors()) 
 		{
-			$class="alert alert-success";
+			$class="alert alert-error";
 			$message = validation_errors();
 		}
 
@@ -25,7 +28,7 @@
 		
 				
 		<!--<form action="<?php echo base_url();?>adminpanel/login/validateLogin" method="post" class="form-signin">-->
-		<form action="" method="post" class="form-signin">	
+		<form action="<?php echo base_url();?>login/validateLogin" method="post" class="form-signin">	
 			<h2 class="form-signin-heading">Please sign in</h2>
 			
 			<!-- error message -->
@@ -36,10 +39,10 @@
 			</div>
 			
 			<!-- email address -->
-			<input name="email" type="text" class="input-block-level" placeholder="Email address" autofocus="true">
+			<input name="email" type="text" class="input-block-level" placeholder="Email address" autofocus="true" required value="<?php echo $this->input->post('email');?>"> 
 			
 			<!-- passowrd -->
-			<input name="password" type="password" class="input-block-level" placeholder="Password">
+			<input name="password" type="password" class="input-block-level" placeholder="Password" required>
 			
 			<!-- remmember me -->
 			<label class="checkbox">

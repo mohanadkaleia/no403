@@ -428,7 +428,7 @@ function gridAddControlBar(grid_id , option , data)
 		var $grid = $("#grid_bar").remove();
 		
 		//reach grid table
-		var $grid =  $('#'+grid_id);
+		var $grid =  $(".grid");
 		
 		//control bar
 		var bar = "";

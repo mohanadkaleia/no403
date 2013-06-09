@@ -11,7 +11,7 @@
 		<h3 class="title">Users</h3>	 
 		
 		<div class="grid">
-			<table id="user" class="grid" action="<?php echo base_url();?>user/ajaxGetUsers" dir="ltr">				
+			<table id="user" action="<?php echo base_url();?>user/ajaxGetUsers" dir="ltr">				
 				<tr>																
 					<th col="id" type="text">ID</th>
 					<th col="name" type="text">User name</th>

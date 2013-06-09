@@ -17,6 +17,16 @@
 class User extends CI_Controller  
 {
 	
+	public function __construct()
+	{
+		parent::__construct();
+		
+		// Your own constructor code
+		if($this->session->userdata('is_logged_in')!=1)
+			redirect(base_url().'login');
+			
+	}
+	
 	
 	public function index()
 	{
@@ -38,14 +48,7 @@ class User extends CI_Controller
 	 */
 	public function login()
 	{
-		//load library	
-		$this->load->library('form_validation');
-											
-		// call header		
-		$this->load->view('gen/header_admin');
-				
-		// call login view
-		$this->load->view('login');
+		redirect(base_url().'login');			
 	}
 	
 	
@@ -205,7 +208,7 @@ class User extends CI_Controller
 			
 		// assign values to the model variable
 		$this->user_model->username = $this->input->post('username');	
-		$this->user_model->password =  $this->input->post('password');
+		$this->user_model->password = md5($this->input->post('password'));
 		$this->user_model->email = $this->input->post('email');									
 		
 		if($this->validateUser()==FALSE) //if there is a problem with the data then redirect to the same page

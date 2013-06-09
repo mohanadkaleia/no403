@@ -12,14 +12,22 @@
 
 ---------------------------------------------------------------------------------------------------------- */
 
-.grid table
+
+.grid
 {
-	min-width: 100%;
+	overflow:auto;
+	background-color:white;	
+	
+	
+}
+
+
+.grid table
+{	
+	width:100%;	
 	margin:0 auto;
 	border: 1px solid #ddd;
-	background-color:#ffffff;
-	
-		
+	background-color:#ffffff;			
 }
 
 
@@ -50,16 +58,22 @@
 	border-bottom: 1px solid #ddd;
 	padding:5px;
 	font-size:16px;	
+	white-space: normal;  	  	
 }
 
 .grid td.func
 {
-	width:25px;
+	width:15px;
 }
 
 .grid td.middle
 {	
 	text-align: center;
+}
+
+.grid tr
+{
+	height:1em;
 }
 
 .grid tr:hover
@@ -70,12 +84,14 @@
 .grid-search
 {
 	margin-bottom:0px;
-	padding:0px;
+	padding:0px;	
+	margin-right:-70px;
+	margin-left:30px;
 }
 
 .grid-search input#search
 {	
-	margin-left:60px;	
+	
 }
 
 .pagination
@@ -87,7 +103,8 @@
 }
 .well
 {
-	margin-top:10px;
+
+			
 }
 
 .grid-pagination

@@ -23,6 +23,8 @@ class Login_model extends CI_Model
 	var $email =  "";
 	var $permission = "";
 	
+		
+	
 	
 	/**
      * Constructor
@@ -49,19 +51,20 @@ class Login_model extends CI_Model
 	 * contact : ms.kaleia@gmail.com
 	 */
 	public function canLogin()
-	{
-			
-			
+	{					
 		$this->email = $this->input->post("email");
 		$this->password = md5($this->input->post("password"));	
-			
+
+		
+				
 		$query = "select * from users 
 				  where 
 				  email='{$this->email}' and
 				  password = '{$this->password}' and
 				  permission = 'ADMIN' and
 				  is_deleted = 'F'";
-				
+		
+		echo $query;		
 			
 		$result = $this->db->query($query);
 		

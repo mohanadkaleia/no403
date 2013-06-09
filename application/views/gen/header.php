@@ -14,7 +14,10 @@
 	<!-- load css -->	
 	<link rel="stylesheet" media="all" type="text/css" href="<?php echo base_url();?>css/bootstrap.css" />
 	<link rel="stylesheet" media="all" type="text/css" href="<?php echo base_url();?>css/reset.css" />		    	
-	<link rel="stylesheet" media="all" type="text/css" href="<?php echo base_url();?>css/style.css" />	  
+	<link rel="stylesheet" media="all" type="text/css" href="<?php echo base_url();?>css/style.css" />	 
+	<link rel="stylesheet" media="all" type="text/css" href="<?php echo base_url();?>css/grid.css" />  
+	
+	 
 </head>
 	
 					

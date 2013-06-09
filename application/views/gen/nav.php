@@ -37,7 +37,7 @@
 		<ul>	
 							
 			<li class="<?php if(isset($home)) echo $home;?>"><a href="<?php echo base_url();?>">Home</a></li>
-			<li class="<?php if(isset($apps)) echo $apps;?>"><a href="<?php echo base_url();?>apps">App center</a></li>
+			<li class="<?php if(isset($program)) echo $program;?>"><a href="<?php echo base_url();?>program">App center</a></li>
 			<li class="<?php if(isset($request)) echo $request;?>"><a href="<?php echo base_url();?>request">Request</a></li>
 			<li class="<?php if(isset($contact)) echo $contact;?>"><a href="<?php echo base_url();?>contact">Contact</a></li>
 			<li class="<?php if(isset($about)) echo $about;?>"><a href="<?php echo base_url();?>about">About</a></li>
