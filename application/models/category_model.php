@@ -156,6 +156,46 @@ class Category_model extends CI_Model
 		//return $query->result(); 		
 	 }
 	 
+	 /**
+	 * function name : getTypes
+	 * 
+	 * Description : 
+	 * get all category from the database
+	 * 		
+	 * Created date ; 10-6-2013
+	 * Modification date : ---
+	 * Modfication reason : ---
+	 * Author : Mohanad Shab Kaleia
+	 * contact : ms.kaleia@gmail.com
+	 */
+	 public function getTypes()
+	 {
+	 	$query = "select DISTINCT type from category where is_deleted='F'";	
+		$query = $this->db->query($query);
+		return $query->result_array();
+		//return $query->result(); 		
+	 }
+	 
+	 /**
+	 * function name : getCategoryByType
+	 * 
+	 * Description : 
+	 * get all category from the database
+	 * 		
+	 * Created date ; 10-6-2013
+	 * Modification date : ---
+	 * Modfication reason : ---
+	 * Author : Mohanad Shab Kaleia
+	 * contact : ms.kaleia@gmail.com
+	 */
+	 public function getCategoryByType($type)
+	 {
+	 	$query = "select * from category where is_deleted='F' and type='{$type}'";	
+		$query = $this->db->query($query);
+		return $query->result_array();
+		//return $query->result(); 		
+	 }
+	 
 	 
 	 /**
 	 * function name : chkUserIsExist

@@ -14,7 +14,7 @@
  */    
     
     
-class Category extends CI_Model
+class Program_model extends CI_Model
 {
 	
 	//class variable
@@ -23,7 +23,9 @@ class Category extends CI_Model
 	var $name = "";				//program name
 	var $physical_name = ""; 	//program physical name
 	var $version = "";			//program version
+	var $download_url="";		//download url
 	var $website = "";			//source program website ex. "www.sourceforge.com"
+	var $produced_by ="";		//company who create the program
 	var $multi_version = FALSE; //is it multi version or not !!
 	var $next_version_date = "";//next vesion date 
 	var $size = "";				//size
@@ -65,16 +67,36 @@ class Category extends CI_Model
 		$multi_version= $this->multi_version;
 		$next_version_date= $this->picture;
 		$size= $this->size;
+		$producer = $this->produced_by;
+		$download_url = $this->download_url;
+		$cat = $this->cat_id;
 		
 		//get user id from session		
 		$user_id = $this->session->userdata('user_id');
 		
+		//add program information to program table
 	 	$query = "insert into program 
-	 			  (name , physical_name , picture , source_website , dowunload_num  , version , multi_version , next_version_date, size ,  description , creator_id ,  created_date)
+	 			  (name , physical_name , picture , website   , version , download_url , multi_version , next_version_date, size ,  description , creator_id ,  created_date)
 	 			  values
-	 			  ('{$name}' , '{$physical_name}' , '{$picture}' , '{$website}' , 0  , '{$version}' , '{$multi_version}' , '{$next_version_date}' , '{$size}' , '{$description}' ,  {$user_id} ,  CURDATE()) 
-	 				";	
+	 			  ('{$name}' , '{$physical_name}' , '{$picture}' , '{$website}'  , '{$version}' , '{$download_url}' , '{$multi_version}' , '{$next_version_date}' , '{$size}' , '{$description}' ,  {$user_id} ,  CURDATE()) 
+	 				";											
 		$this->db->query($query);
+		
+		$this->id =  $this->db->insert_id();
+		
+		
+		
+		//add program's categories to database
+		for( $i=0 ; $i<count($cat) ; $i++)
+		{
+			$query = "insert into programCategory 
+					  (prog_id , cat_id)
+					  values
+					  ({$this->id} , {$cat[$i]})";
+		    $this->db->query($query);	
+		} 
+		
+		
 	 }
 	
 	
@@ -189,10 +211,14 @@ class Category extends CI_Model
 	 * Author : Mohanad Shab Kaleia
 	 * contact : ms.kaleia@gmail.com
 	 */
-	public function chkProgramIsExist()
-	{
-			
-		$query = "select * from program where name='{$this->name}'";	
+	public function chkProgIsExist($id=null)
+	{		
+		$query = "select * from program where name='{$this->name}'";		
+		
+		if(isset($id) & $id!=null)
+		{			
+			$query.=" and id<>{$id}";
+		}
 			
 		$result = $this->db->query($query);
 		
@@ -203,7 +229,6 @@ class Category extends CI_Model
 		{
 			return FALSE;
 		}
-
 	} 
 	
 	

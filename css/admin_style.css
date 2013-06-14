@@ -105,9 +105,17 @@ h3.title
 	margin-left:20%;
 }
 
+.user_form table tr
+{
+	border-bottom:1px dotted gray;
+	
+}
+
 .user_form table td
 {
 	padding:5px;
+	padding-top:10px;	
+	
 }
 
 .control_button
@@ -168,4 +176,38 @@ h3.title
 
 
 
+/* ----------------------------------------------------------------------------------------------------------
+6) form element 
+---------------------------------------------------------------------------------------------------------- */
+label
+{
+	color:#0088cc;
+}
 
+
+
+.form_table
+{
+	background-color:white;
+	border-radius: 5px;
+	border:1px solid gray;	
+}
+
+.form_table tr.title
+{
+	background-color:#c3c3c3;
+	font-weight: bold;
+	font-size: larger;
+	color:white;
+}
+
+
+.form_table tr.odd
+{
+	background-color:white;
+}
+
+.form_table tr.even
+{
+	background-color:#f6f6f6;
+}
